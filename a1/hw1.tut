@@ -1,0 +1,109 @@
+% -------------------------------------------------------------
+% HOMEWORK 1  --- due Jan 28 1:05pm (beginning of class)
+% ------------------------------------------------------------
+%
+% ------------------------------------------------------------
+% Q1 : Prove the following statements (26 points)
+
+proof easy0 : (A & (B & C)) => (A & B) =
+begin
+[ (A & (B & C));
+  A;
+  B & C;
+  B;
+  A & B ];
+(A & (B & C)) => (A & B)
+end;
+proof easy1 :  (A => B) => ((B => C) => (A => C)) =
+begin
+[ A => B;
+  [ B => C;
+    [ A;
+      B;
+      C ];
+    A => C ];
+  (B => C) => (A => C)];
+(A => B) => ((B => C) => (A => C))
+end;
+proof d1a : ((A | B) => C) => (A => C) & (B => C) =
+begin
+[ (A | B) => C;
+  [ A;
+    A | B;
+    C ];
+  A => C;
+  [ B;
+    A | B;
+    C ];
+  B => C;
+  (A => C) & (B => C) ];
+((A | B) => C) => (A => C) & (B => C)
+end;
+proof d1b :  (A => C) & (B => C) => (A | B) => C =
+begin
+[ (A => C) & (B => C);
+  A => C;
+  B => C;
+  [ A | B;
+    [ A;
+      C ];
+    [ B;
+      C ];
+    C ];
+  (A | B) => C ];
+(A => C) & (B => C) => (A | B) => C
+end;
+proof d1c : ((A => B) & (A | C)) => (B | C) =
+begin
+[ (A => B) & (A | C);
+  A => B;
+  A | C;
+  [ A;         % A => B | C
+    B;
+    B | C ];
+  [ C;         % C => B | C
+    B | C ];
+  B | C];
+((A => B) & (A | C)) => (B | C)
+end;
+
+% OPTIONAL
+proof easy2 : (A | (B & C)) => ((A | B) & (A | C)) =
+begin
+[ A | (B & C);
+  [ A;
+    A | B;
+	A | C;
+	(A | B) & (A | C) ];
+  [ B & C;
+    B;
+    C;
+    A | B;
+	A | C;
+	(A | B) & (A | C) ];
+  (A | B) & (A | C) ];
+(A | (B & C)) => ((A | B) & (A | C))
+end;
+%{proof d1d : (A => ~ A) => (~ A) =
+begin
+[ A => ~ A;
+  [ A;
+    ~ A ];
+  ~ A ];
+(A => ~ A) => (~ A)
+end;
+
+% ------------------------------------------------------------
+% Q2 : De Morgan's Laws
+
+proof q1a  : (~A | ~B) => ~(A & B);
+proof q1b : ~A & ~B => ~(A | B);
+proof q1c : ~(A | B) => ~A & ~B;
+proof q1d : ~(A & B) => (~A | ~B);
+proof q1e : (~ ~ ~ A => ~ A);
+}%
+
+% ------------------------------------------------------------
+% Q3 : On paper -- 
+% ------------------------------------------------------------
+
