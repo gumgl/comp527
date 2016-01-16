@@ -25,33 +25,33 @@ begin
   (B => C) => (A => C)];
 (A => B) => ((B => C) => (A => C))
 end;
-proof d1a : ((A | B) => C) => (A => C) & (B => C) =
+annotated proof d1a : ((A | B) => C) => (A => C) & (B => C) =
 begin
-[ (A | B) => C;
-  [ A;
-    A | B;
-    C ];
-  A => C;
-  [ B;
-    A | B;
-    C ];
-  B => C;
-  (A => C) & (B => C) ];
-((A | B) => C) => (A => C) & (B => C)
+[ x : (A | B) => C;
+  [ a : A;
+    inl a : A | B;
+    (x) (inl a) : C ];
+  fn a => (x) (inl a) : A => C;
+  [ b : B;
+    inr b : A | B;
+    (x) (inr b) : C ];
+  fn b => (x) (inr b) : B => C;
+  (fn a => (x) (inl a), fn b => (x) (inr b)) : (A => C) & (B => C) ];
+fn x => (fn a => (x) (inl a), fn b => (x) (inr b)) : ((A | B) => C) => (A => C) & (B => C)
 end;
-proof d1b :  (A => C) & (B => C) => (A | B) => C =
+annotated proof d1b : (A => C) & (B => C) => (A | B) => C =
 begin
-[ (A => C) & (B => C);
-  A => C;
-  B => C;
-  [ A | B;
-    [ A;
-      C ];
-    [ B;
-      C ];
-    C ];
-  (A | B) => C ];
-(A => C) & (B => C) => (A | B) => C
+[ x : (A => C) & (B => C);
+  fst x : A => C;
+  snd x : B => C;
+  [ y : A | B;
+    [ a : A;
+      (fst x) a : C ];
+    [ b : B;
+      (snd x) b : C ];
+    case y of inl a => (fst x) a | inr b => (snd x) b end : C ];
+  fn y => (case y of inl a => (fst x) a | inr b => (snd x) b end) : (A | B) => C ];
+fn x => (fn y => (case y of inl a => (fst x) a | inr b => (snd x) b end)) : (A => C) & (B => C) => (A | B) => C
 end;
 proof d1c : ((A => B) & (A | C)) => (B | C) =
 begin
