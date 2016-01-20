@@ -6,7 +6,7 @@
 \usepackage{graphicx}
 \usepackage{xfrac}
 
-\usepackage{bussproofs}
+\usepackage{proof}
 \usepackage{amssymb}
 \usepackage{latexsym}
 
@@ -22,5 +22,35 @@
 \maketitle
 
 \textbf{Exercise 3:} Alternative elimination rules for $\and$
+
+Local soundness:
+
+$$
+\infer[\land E^{u,v}]
+  {C\text{ true}}
+  {\infer[\land I]
+    {A \land B\text{ true}}
+    {A\text{ true} & B\text{ true}}
+  & \infer*{C}{\infer[u]{A\text{ true}}{} & \infer[u]{B\text{ true}}{}}
+  }
+\implies
+\infer
+  {C\text{ true}}
+  {A\text{ true} & B\text{ true}}
+$$
+
+Local completeness:
+
+$$
+A \land B\text{ true}
+\implies
+\infer[\land E^{u,v}]
+  {A \land B \text{ true}}
+  {A \land B\text{ true}
+  &\infer[\land I]
+    {A \land B \text{ true}}
+    {\infer[u]{A\text{ true}}{} & \infer[u]{B\text{ true}}{}}
+  }
+$$
 
 \end{document}
