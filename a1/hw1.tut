@@ -92,16 +92,95 @@ begin
   ~ A ];
 (A => ~ A) => (~ A)
 end;
-
+}%
 % ------------------------------------------------------------
 % Q2 : De Morgan's Laws
 
-proof q1a  : (~A | ~B) => ~(A & B);
-proof q1b : ~A & ~B => ~(A | B);
-proof q1c : ~(A | B) => ~A & ~B;
-proof q1d : ~(A & B) => (~A | ~B);
-proof q1e : (~ ~ ~ A => ~ A);
-}%
+proof q1a  : (~A | ~B) => ~(A & B) =
+begin
+[ ~A | ~B;
+  [ ~A;
+    [ A & B;
+	  A;
+	  F ];
+    ~(A & B) ];
+  [ ~B;
+    [ A & B;
+	  B;
+	  F ];
+    ~(A & B) ];
+  ~(A & B) ];
+(~A | ~B) => ~(A & B)
+end;
+proof q1b : ~A & ~B => ~(A | B) =
+begin
+[ ~A & ~B;
+  ~A;
+  ~B;
+  [ A | B;
+    [ A;
+      F ];
+    [ B;
+      F ];
+    F ];
+  ~(A | B) ];
+~A & ~B => ~(A | B)
+end;
+proof q1c : ~(A | B) => ~A & ~B =
+begin
+[ ~(A | B);
+  [ A;
+    A | B;
+    F ];
+  ~A;
+  [ B;
+    A | B;
+    F ];
+  ~B;
+  ~A & ~B ];
+~(A | B) => ~A & ~B
+end;
+classical proof q1d : ~(A & B) => (~A | ~B) =
+begin
+[ ~(A & B);      %          (A & B)   |- F
+  [ ~ (~A | ~B); % Assuming (~A | ~B) |- F
+    [ ~A;
+      ~A | ~B;
+      F ];
+    A;
+    [ ~B;
+      ~A | ~B;
+      F ];
+    B;
+    A & B;
+    F ]; % Contradiction
+  (~A | ~B) ];
+~(A & B) => (~A | ~B)
+end;
+classical proof excluded_middle : A | ~A = 
+begin
+[ ~(A | ~A);
+  [ A; % If A is true
+    A | ~A;
+    F ]; % contradiction!
+  ~A; % therefore A must be false
+  A | ~A;
+  F ]; % another contradiction!
+A | ~A % proof by contradiction
+end;
+proof q1e : (~ ~ ~ A => ~ A) =
+begin
+[ ~ ~ ~ A;
+  [ A;
+    [ ~ A;
+      A;
+      F ];
+    ~ ~ A;
+    F ];
+  ~ A ];
+(~ ~ ~ A => ~ A)
+end;
+
 
 % ------------------------------------------------------------
 % Q3 : On paper -- 
