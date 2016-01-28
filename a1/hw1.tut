@@ -14,6 +14,8 @@ begin
   A & B ];
 (A & (B & C)) => (A & B)
 end;
+term easy0 : (A & (B & C)) => (A & B) =
+  fn x => ((fst x), (fst (snd x)));
 proof easy1 :  (A => B) => ((B => C) => (A => C)) =
 begin
 [ A => B;
@@ -25,6 +27,8 @@ begin
   (B => C) => (A => C)];
 (A => B) => ((B => C) => (A => C))
 end;
+term easy1 :  (A => B) => ((B => C) => (A => C)) =
+  fn x => fn y => fn a => ((y) ((x) a)) ;
 annotated proof d1a : ((A | B) => C) => (A => C) & (B => C) =
 begin
 [ x : (A | B) => C;
@@ -66,7 +70,8 @@ begin
   B | C];
 ((A => B) & (A | C)) => (B | C)
 end;
-
+term d1c : ((A => B) & (A | C)) => (B | C) =
+  fn x => case (snd x) of inl a => (inl ((fst x) a)) | inr c => inr c end;
 % OPTIONAL
 proof easy2 : (A | (B & C)) => ((A | B) & (A | C)) =
 begin
