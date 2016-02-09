@@ -1,0 +1,44 @@
+proof conj1 : (?x:t.A => B(x)) => (A => ?x:t.B(x)) =
+begin
+[ ?x:t.A => B(x); % u
+  [ A; % v
+    [x:t, A=>B(x); % x,b
+      B(x);
+      ?x:t.B(x) ]; % x,b
+    ?x:t.B(x) ]; % v
+  A => ?x:t.B(x) ]; % u
+(?x:t.A => B(x)) => (A => ?x:t.B(x))
+end;
+
+term conj1 : (?x:t.A => B(x)) => (A => ?x:t.B(x)) =
+fn d => let (x,p)=d in (fn a => (x,p a));
+
+proof conj4 : (?x:t.(P(x)=>A)) => ((!x:t.P(x)) => A) =
+begin
+[ ?x:t.(P(x)=>A); % u
+  [ x:t, P(x)=>A; % x,b
+    [ (!x:t.P(x)); % v
+      P(x);
+      A ]; % v
+    (!x:t.P(x)) => A ]; % x,b
+  (!x:t.P(x)) => A ]; % u
+(?x:t.(P(x)=>A)) => ((!x:t.P(x)) => A)
+end;
+
+term conj4 : (?x:t.(P(x)=>A)) => ((!x:t.P(x)) => A) =
+fn d => let (x,p)=d in (fn e => p (e x));
+
+proof conj6 : ~(?x:t.B(x)) => (!x:t.~B(x)) =
+begin
+[ ~(?x:t.B(x)); % u
+  [ x:t; % x
+    [ B(x); % v
+      ?x:t.B(x);
+      F ]; %v
+    ~B(x) ]; % x
+  !x:t.~B(x)]; % u
+~(?x:t.B(x)) => (!x:t.~B(x))
+end;
+
+term conj6 : ~(?x:t.B(x)) => (!x:t.~B(x)) =
+fn d => fn x => fn b => (d (x,b));

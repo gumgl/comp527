@@ -1,0 +1,33 @@
+proof conj1 : (A & ?x:t.B(x)) => ?x:t.A&B(x) =
+begin
+[ A & ?x:t.B(x); % u
+  A;
+  ?x:t.B(x);
+  [ x:t,B(x); % x,b
+    A&B(x);
+    ?x:t.A&B(x) ]; % x,b
+  ?x:t.A&B(x) ]; % u
+(A & ?x:t.B(x)) => ?x:t.A&B(x)
+end;
+
+term conj1 : (A & ?x:t.B(x)) => ?x:t.A&B(x) =
+fn d => let (a,p)=d in ((fst p),(a,(snd p)));
+
+proof conj2 : (?x:t.A&B(x)) => (A & ?x:t.B(x)) =
+begin
+[ ?x:t.A&B(x); % u
+  %A;
+  %?x:t.B(x);
+  [ x:t,A&B(x); % x,b
+    A;
+    B(x);
+    ?x:t.B(x);
+    A & ?x:t.B(x) ]; % x,b
+  A & ?x:t.B(x) ]; % u
+(?x:t.A&B(x)) => (A & ?x:t.B(x))
+end;
+
+term conj2 : (?x:t.A&B(x)) => (A & ?x:t.B(x)) =
+fn d => let (x,p)=d in ((fst p),(x, snd p));
+%fn d => ((fst (snd d)),((fst d), snd (snd d))); % also works! but ugly..
+% try with fst
