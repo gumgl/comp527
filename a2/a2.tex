@@ -1,0 +1,141 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage[margin=1in]{geometry}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{xfrac}
+\usepackage{enumitem}
+\usepackage{multirow}
+
+\usepackage{proof}
+\usepackage{amssymb}
+\usepackage{latexsym}
+
+\author{Guillaume Labranche (260585371)}
+\title{COMP 527 -- Logic and Computation\\Homework 2}
+\date{due on 11 February 2016}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+%\renewcommand{\t}{\text{ true}}
+\renewcommand{\t}{\text{}}
+\newcommand{\fst}{\text{fst }}
+\newcommand{\snd}{\text{snd }}
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}[label=\textbf{Exercise \arabic*}]
+
+
+\item If and only if
+
+\begin{enumerate}[label=\textbf{Task \arabic*},leftmargin=1em]
+\item Annotated introduction and elimination rules for $\equiv$.
+\[
+\infer[\equiv I^{u,v}]
+  {\langle \lambda x \in A.M,\lambda y \in B.N \rangle A \equiv B \t}
+  {\infer*{M:B\t}{\infer[u]{x:A\t}{}} & \infer*{N:A\t}{\infer[v]{y:B\t}{}}}
+\]
+\begin{tabular}{cc}
+$$
+\infer[\equiv E_L]
+  {(\fst M) x : B \t}
+  {M:A \equiv B \t & x : A \t}
+$$
+&
+$$
+\infer[\equiv E_L]
+  {(\snd M) x : A \t}
+  {M:A \equiv B \t & x : B \t}
+$$
+\end{tabular}
+
+\item Local reduction %soundness
+\[
+\infer[\equiv E_L]
+  { (\fst \langle \lambda x \in A.M,\lambda y \in B.N \rangle) w : B \t}
+  {\infer[\equiv I^{u,v}]
+    {\langle \lambda x \in A.M,\lambda y \in B.N \rangle A \equiv B \t}
+    {\deduce[\mathcal{D}]{M:B\t}{\infer[u]{x:A\t}{}}
+     & \deduce[\mathcal{E}]{N:A\t}{\infer[v]{y:B\t}{}}
+     }
+  & \deduce[\mathcal{F}]{w:A \t}{}
+  }
+\Rightarrow_R
+\deduce[{[}\mathcal{F}/x{]}\mathcal{D}]
+  {M:B \t}
+  {}
+\]
+
+\[
+\infer[\equiv E_L]
+  { (\snd \langle \lambda x \in A.M,\lambda y \in B.N \rangle) w : A \t}
+  {\infer[\equiv I^{u,v}]
+    {\langle \lambda x \in A.M,\lambda y \in B.N \rangle A \equiv B \t}
+    {\deduce[\mathcal{D}]{M:B\t}{\infer[u]{x:A\t}{}}
+     & \deduce[\mathcal{E}]{N:A\t}{\infer[v]{y:B\t}{}}
+     }
+  & \deduce[\mathcal{F}]{w:B \t}{}
+  }
+\Rightarrow_R
+\deduce[{[}\mathcal{F}/y{]}\mathcal{E}]
+  {N:A \t}
+  {}
+\]
+
+Local expansion %completeness
+\[
+\deduce[\mathcal{D}]{M : A \equiv B \t}{}
+\Rightarrow_E
+\infer[\equiv I^{u,v}]
+  {\langle \fst M, \snd M \rangle : A \equiv B \t}
+  {\infer[\equiv E_L]
+    {(\fst M)x : B \t}
+    {\deduce[\mathcal{D}]{M : A \equiv B \t}{}
+    & \infer[u]{x:A \t}{}}
+  &\infer[\equiv E_L]
+    {(\snd M)y : A \t}
+    {\deduce[\mathcal{D}]{M : A \equiv B \t}{}
+    & \infer[u]{y:B \t}{}}
+  }
+\]
+
+\item non
+\item 6 pts
+\end{enumerate}
+
+\item We prove this by structural induction on the rules
+
+\begin{tabular}{cc}
+$$
+\infer[\land I]
+  {\Gamma \vdash \langle M,N \rangle : A\land B}
+  {\Gamma \vdash M:A & \Gamma \vdash N:B}
+$$
+&$$
+$$
+\end{tabular}
+
+\item
+
+\begin{enumerate}[label=\arabic*.,leftmargin=1em]
+\item Proof and term given as \texttt{conj1} in \texttt{ex3.tut}
+\item The proof breaks down because doing an $\exists E^{x,p}$ gives us $x:\tau$ and $A\supset P(x)$ yet in order to prove $\forall y\in\tau.P(y)$ we need an arbitrary $y\in\tau$.
+\item Not provable
+\item Proof and term given as \texttt{conj4} in \texttt{ex3.tut}
+\item As shown in the course notes, we need a witness for $x\in\tau$ such that $\neg B(x)$ yet we know nothing about the domain $\tau$. Therefore we cannot produce one just from the assumption $\neg(\forall x\in\tau.B(x))$.
+\item Proof and term given as \texttt{conj6} in \texttt{ex3.tut}
+\end{enumerate}
+
+\item Provable
+\begin{enumerate}[label=\arabic*.,leftmargin=1em]
+\item Proof and term given as \texttt{conj1} in \texttt{ex4.tut}
+\item Proof and term given as \texttt{conj2} in \texttt{ex4.tut}
+\item Proof and term given as \texttt{conj3} in \texttt{ex4.tut}
+\end{enumerate}
+
+\end{enumerate}
+
+\end{document}
