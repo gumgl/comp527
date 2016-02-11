@@ -46,7 +46,7 @@ $$
 $$
 &
 $$
-\infer[\equiv E_L]
+\infer[\equiv E_R]
   {(\snd M) x : A \t}
   {M:A \equiv B \t & x : B \t}
 $$
@@ -102,11 +102,33 @@ Local expansion %completeness
   }
 \]
 
-\item non
-\item 6 pts
+\item This syntax is incomprehensible to me and I could not find its description in the notes or other material. It's a shame because I'm sure the concepts are really not hard. It's just a matter of notation and meaning...
+\item 
+\[
+\infer[\equiv I^{u,v}]
+  {\Gamma^\downarrow \vdash \langle \lambda u \in A.M,\lambda v \in B.N \rangle A \equiv B \uparrow}
+  {\Gamma^\downarrow, u:A {\downarrow} \vdash M:B \uparrow
+  &\Gamma^\downarrow, v:B {\downarrow} \vdash N:A \uparrow}
+\]
+\begin{tabular}{cc}
+$$
+\infer[\equiv E_L]
+  { \Gamma^\downarrow \vdash (\fst M) x : B \downarrow }
+  { \Gamma^\downarrow \vdash M:A \equiv B \downarrow
+  & \Gamma^\downarrow \vdash x : A \uparrow }
+$$
+&
+$$
+\infer[\equiv E_R]
+  { \Gamma^\downarrow \vdash (\snd M) x : A \downarrow }
+  { \Gamma^\downarrow \vdash M:A \equiv B \downarrow
+  & \Gamma^\downarrow \vdash x : B \uparrow }
+$$
+\end{tabular}
+
 \end{enumerate}
 
-\item We prove this by structural induction on the rules
+\item We prove this by structural induction on the proof trees yet I have no idea how to actually do this.
 
 \begin{tabular}{cc}
 $$
@@ -121,19 +143,19 @@ $$
 \item
 
 \begin{enumerate}[label=\arabic*.,leftmargin=1em]
-\item Proof and term given as \texttt{conj1} in \texttt{ex3.tut}
+\item Proof and term given as \texttt{conj1} in \texttt{ex3.tut}.
 \item The proof breaks down because doing an $\exists E^{x,p}$ gives us $x:\tau$ and $A\supset P(x)$ yet in order to prove $\forall y\in\tau.P(y)$ we need an arbitrary $y\in\tau$.
-\item Not provable
-\item Proof and term given as \texttt{conj4} in \texttt{ex3.tut}
+\item Same reason as the previous conjecture.
+\item Proof and term given as \texttt{conj4} in \texttt{ex3.tut}.
 \item As shown in the course notes, we need a witness for $x\in\tau$ such that $\neg B(x)$ yet we know nothing about the domain $\tau$. Therefore we cannot produce one just from the assumption $\neg(\forall x\in\tau.B(x))$.
-\item Proof and term given as \texttt{conj6} in \texttt{ex3.tut}
+\item Proof and term given as \texttt{conj6} in \texttt{ex3.tut}.
 \end{enumerate}
 
 \item Provable
 \begin{enumerate}[label=\arabic*.,leftmargin=1em]
-\item Proof and term given as \texttt{conj1} in \texttt{ex4.tut}
-\item Proof and term given as \texttt{conj2} in \texttt{ex4.tut}
-\item Proof and term given as \texttt{conj3} in \texttt{ex4.tut}
+\item Proof and term given as \texttt{conj1} in \texttt{ex4.tut}.
+\item Proof and term given as \texttt{conj2} in \texttt{ex4.tut}.
+\item Proof and term given as \texttt{conj3} in \texttt{ex4.tut}.
 \end{enumerate}
 
 \end{enumerate}
