@@ -16,12 +16,18 @@
 \title{COMP 527 -- Logic and Computation\\Homework 2}
 \date{due on 11 February 2016}
 
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\F}{\mathbb{F}}
-%\renewcommand{\t}{\text{ true}}
++{\R}{\mathbb{R}}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\GV}{\Gamma \vdash}
+%\newcommand{\fst}{\text{fst }}
+%\newcommand{\snd}{\text{snd }}
+\DeclareMathOperator{\fst}{fst}
+\DeclareMathOperator{\snd}{snd}
+\DeclareMathOperator{\tasdasfd}{true}
+%\renewcommand{\t}{\tasdasfd{}}
 \renewcommand{\t}{\text{}}
-\newcommand{\fst}{\text{fst }}
-\newcommand{\snd}{\text{snd }}
 \begin{document}
 
 \maketitle
@@ -52,7 +58,7 @@ $$
 $$
 \end{tabular}
 
-\item Local reduction %soundness
+\item Local reduction: %soundness
 \[
 \infer[\equiv E_L]
   { (\fst \langle \lambda x \in A.M,\lambda y \in B.N \rangle) w : B \t}
@@ -85,7 +91,7 @@ $$
   {}
 \]
 
-Local expansion %completeness
+Local expansion: %completeness
 \[
 \deduce[\mathcal{D}]{M : A \equiv B \t}{}
 \Rightarrow_E
@@ -128,8 +134,32 @@ $$
 
 \end{enumerate}
 
-\item We prove this by structural induction on the proof trees yet I have no idea how to actually do this.
+\item We prove this by structural induction on the proof tree $\mathcal{D}$.
 
+\begin{itemize}
+\item First we show the base cases:
+\begin{tabular}{cc}
+$\D = \infer[\top I]{\Gamma \vdash () : \top}{}$
+&
+$\D' = \infer[\top I]{\Gamma \vdash () : \top}{}$
+\end{tabular}
+\begin{align*}
+\top &= \top && \text{by definition}
+\end{align*}
+
+\item case
+\begin{tabular}{cc}
+$\D = \infer[\top I]
+  {\Gamma \vdash \langle M,N \rangle : A_1 \land A_2}
+  {\Gamma \vdash }$
+&
+$\D' = \infer[\top I]{\Gamma \vdash () : \top}{}$
+\end{tabular}
+\begin{align*}
+\top &= \top && \text{by definition}
+\end{align*}
+
+\item case %$\land I$
 \begin{tabular}{cc}
 $$
 \infer[\land I]
@@ -139,6 +169,7 @@ $$
 &$$
 $$
 \end{tabular}
+\end{itemize}
 
 \item
 
@@ -147,7 +178,7 @@ $$
 \item The proof breaks down because doing an $\exists E^{x,p}$ gives us $x:\tau$ and $A\supset P(x)$ yet in order to prove $\forall y\in\tau.P(y)$ we need an arbitrary $y\in\tau$.
 \item Same reason as the previous conjecture.
 \item Proof and term given as \texttt{conj4} in \texttt{ex3.tut}.
-\item As shown in the course notes, we need a witness for $x\in\tau$ such that $\neg B(x)$ yet we know nothing about the domain $\tau$. Therefore we cannot produce one just from the assumption $\neg(\forall x\in\tau.B(x))$.
+\item As shown in the course notes, we need a witness for $x\in\tau$ such that $\neg B(x)$ yet we know nothing about the domain $\tau$. Therefore we cannot produce one just fdrom the assumption $\neg(\forall x\in\tau.B(x))$.
 \item Proof and term given as \texttt{conj6} in \texttt{ex3.tut}.
 \end{enumerate}
 
