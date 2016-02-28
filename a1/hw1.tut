@@ -117,6 +117,8 @@ begin
   ~(A & B) ];
 (~A | ~B) => ~(A & B)
 end;
+term q1a: (~A | ~B) => ~(A & B) =
+  fn x => case x of inl na => (fn ab => na (fst ab)) | inr nb => (fn ab => nb (snd ab)) end;
 proof q1b : ~A & ~B => ~(A | B) =
 begin
 [ ~A & ~B;
@@ -131,6 +133,11 @@ begin
   ~(A | B) ];
 ~A & ~B => ~(A | B)
 end;
+term q1b : ~A & ~B => ~(A | B) =
+  fn x => fn aob => case aob
+    of inl a => (fst x) a
+	|  inr b => (snd x) b
+  end;
 proof q1c : ~(A | B) => ~A & ~B =
 begin
 [ ~(A | B);
@@ -191,3 +198,13 @@ end;
 % Q3 : On paper -- 
 % ------------------------------------------------------------
 
+
+% ------------------------------------------------------------
+% Assignment 3 Exercise 1 d)
+% ------------------------------------------------------------
+
+term a3e1d : ((A & B) | C) => ((A | C) & (B | C)) = 
+  fn x => case x
+    of inl ab => (inl (fst ab), inl (snd ab))
+    |  inr c => (inr c, inr c)
+  end;

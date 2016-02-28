@@ -1,0 +1,83 @@
+% Guillaume Labranche 260585371
+% COMP 527 Winter 2016 - Assignment 3 Exercise 2
+
+LF nat:type = 
+| z : nat
+| s : nat -> nat;
+
+%{let one = [ |- s z ];
+let two = s one;
+let three = s two;
+let four = s three;
+let five = s four;
+let six = s five;
+let seven = s six;
+let eight = s seven;
+let nine = s eight;
+let ten = s nine;}%
+
+LF even: nat -> type =
+| ev_z : even z
+| ev_s : even N -> even (s (s N));
+
+LF add: nat -> nat -> nat -> type = 
+| a_z: add z N N 
+| a_s: add N M K -> add (s N) M (s K);
+
+LF list: type = 
+| nil : list
+| cons: nat -> list -> list;
+
+LF length : list -> nat -> type = 
+| l_nil : length nil z
+| l_cons: length L N -> length (cons H L) (s N);
+
+LF eq: nat -> nat -> type = 
+| refl: eq N N;
+
+LF leq: nat -> nat -> type = 
+| le_z: leq z N
+| le_s: leq N M -> leq (s N) (s M);
+
+%{LF gt: nat -> nat -> type = 
+| gt_z: gt (s N) z
+| gt_s: gt N M -> gt (s N) (s M); }%
+
+LF sorted: list -> type =
+| sorted_nil : sorted nil
+| sorted_single : sorted (cons N nil)
+| sorted_cons : sorted (cons Y L) -> (leq X Y) -> sorted (cons X (cons Y L));
+
+% sorted [0,1,2]
+%query 1 * Sorted1 : sorted (cons z (cons (s z) (cons (s (s z)) nil))).
+% sorted [1,4]
+%query 1 * Sorted2 : sorted (cons (s z) (cons (s (s (s (s z)))) nil)).
+% sorted [1]
+%query 1 * Sorted3 : sorted (cons (s z) nil).
+
+LF member : nat -> list -> type = 
+| member_check : (eq X Y) -> member X (cons Y L)
+| member_grow : member X L -> member X (cons Y L);
+
+% member 3 [3,1,4]
+%query 1 * Member1 : member (s (s (s z))) (cons (s (s (s z))) (cons (s z) (cons (s (s (s (s z)))) nil))).
+% member 1 [3,1,4]
+%query 1 * Member2 : member (s z) (cons (s (s (s z))) (cons (s z) (cons (s (s (s (s z)))) nil))).
+% member 4 [3,1,4]
+%query 1 * Member3 : member (s (s (s (s z)))) (cons (s (s (s z))) (cons (s z) (cons (s (s (s (s z)))) nil))).
+
+LF insert : nat -> list -> list -> type =
+| insert_nil : insert X nil (cons X nil)
+| insert_now : leq X H -> insert X (cons H L) (cons X (cons H L))
+| insert_later : leq Y X -> insert X Z ZP -> insert X (cons Y Z) (cons Y ZP);
+
+%{ | i_cons : insert X (cons H L) -> leq X H -> insert
+| i_grow2 : gt X Y -> insert X (cons Y L) (cons Y M) -> (insert X L M);
+ | i_cons : insert X L M -> sorted L -> insert X M (cons X M)
+}%
+% insert 1 [] [1]
+%query 1 * Insert1 : insert (s z) nil (cons (s z) nil).
+% insert 2 [1,4] [1,2,4]
+%query 1 * Insert2 : insert (s (s z)) (cons (s z) (cons (s (s (s (s z)))) nil)) (cons (s z) (cons (s (s z)) (cons (s (s (s (s z)))) nil))).
+% insert 2 [4,1] [2,4,1]
+%query 1 * Insert3 : insert (s (s z)) (cons (s (s (s (s z)))) (cons (s z) nil)) (cons (s (s z)) (cons (s (s (s (s z)))) (cons (s z) nil))).

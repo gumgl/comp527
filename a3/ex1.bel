@@ -1,0 +1,69 @@
+% Guillaume Labranche 260585371
+% COMP 527 Winter 2016 - Assignment 3 Exercise 1
+
+% Define  propositions
+LF o : type = 
+| imp : o -> o -> o
+| &   : o -> o -> o
+| or  : o -> o -> o
+| top : o
+| bot : o
+;
+
+LF nd : o -> type = % Natural deduction
+| andI : nd A -> nd B -> nd (& A B)
+| andEl : nd (& A B) -> nd A
+| andEr : nd (& A B) -> nd B
+| orIl : nd A -> nd (or A B)
+| orIr : nd B -> nd (or A B)
+| orE  : nd (or A B) -> (nd A -> nd C) -> (nd B -> nd C) -> nd C
+| impI : (nd A -> nd B) -> nd (imp A B)
+| impE : nd (imp A B) -> nd A -> nd B
+| topI : nd top
+| botE : nd C;
+
+%{ Replacing nd    with tm
+             andI  with pair
+             andEl with fst
+             andEr with snd
+			 orIl  with inl
+			 orIr  with inr
+			 orE   with caseof
+             impI  with fun
+             impE  with app
+             topI  with unit
+			 botE  with abort
+}%
+ 
+LF tm : o -> type = % Natural deduction
+| pair : tm A -> tm B -> tm (& A B)
+| fst : tm (& A B) -> tm A
+| snd : tm (& A B) -> tm B
+| inl : tm A -> tm (or A B)
+| inr : tm B -> tm (or A B)
+| caseof : tm (or A B) -> (tm A -> tm C) -> (tm B -> tm C) -> tm C
+| fun : (tm A -> tm B) -> tm (imp A B)
+| app : tm (imp A B) -> tm A -> tm B
+| unit : tm top
+| abort : tm C;
+
+rec q0 : [ |- tm (imp (or (imp A bot) (imp B bot)) (imp (& A B) bot))] = 
+[ |- fun \u. caseof u
+  (\na.                   % (imp A bot)
+    (fun \ab.             % (pair A B)
+	  (app na (fst ab)))) % (bot)
+  (\nb.                   % (imp B bot)
+    (fun \ab.             % (pair A B)
+	  (app nb (snd ab))))]; % (bot)
+
+rec q1 : [ |- tm (imp (& (imp A bot) (imp B bot)) (imp (or A B) bot))] =
+[ |- fun \u. fun \aob. caseof aob
+  (\a. app (fst u) a)
+  (\b. app (snd u) b)
+];
+
+rec q2 : [ |- tm (imp (or (& A B) C) (& (or A C) (or B C)))] =
+[ |- fun \x. caseof x
+  (\ab. pair (inl (fst ab)) (inl (snd ab)) )
+  (\c. pair (inr c) (inr c))
+];
