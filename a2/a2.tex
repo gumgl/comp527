@@ -16,15 +16,19 @@
 \title{COMP 527 -- Logic and Computation\\Homework 2}
 \date{due on 11 February 2016}
 
-+{\R}{\mathbb{R}}
 \newcommand{\D}{\mathcal{D}}
 \newcommand{\E}{\mathcal{E}}
 \newcommand{\F}{\mathcal{F}}
-\newcommand{\GV}{\Gamma \vdash}
+\newcommand{\then}{\supset}
+\newcommand{\proves}{\vdash}
+\newcommand{\GV}{\Gamma \proves}
 %\newcommand{\fst}{\text{fst }}
 %\newcommand{\snd}{\text{snd }}
 \DeclareMathOperator{\fst}{fst}
 \DeclareMathOperator{\snd}{snd}
+\DeclareMathOperator{\inl}{inl}
+\DeclareMathOperator{\inr}{inr}
+\DeclareMathOperator{\abort}{abort}
 \DeclareMathOperator{\tasdasfd}{true}
 %\renewcommand{\t}{\tasdasfd{}}
 \renewcommand{\t}{\text{}}
@@ -108,27 +112,43 @@ Local expansion: %completeness
   }
 \]
 
-\item This syntax is incomprehensible to me and I could not find its description in the notes or other material. It's a shame because I'm sure the concepts are really not hard. It's just a matter of notation and meaning...
+\item Here are three cases:
+
+$$\D = \infer[\equiv I^{u, v}]
+  {\Gamma, x:A, \Gamma' \vdash B_1 \equiv B_2}
+  {\Gamma, x:A, \Gamma', u:B_2 \vdash B_1 & \Gamma, x:A, \Gamma', v:B_1 \vdash B_2}
+$$
+
+$$\D = \infer[\equiv E_l]
+  {\Gamma, x:A, \Gamma' \vdash B_2}
+  {\Gamma, x:A, \Gamma' \vdash B_1 \equiv B_2 & \Gamma, x:A, \Gamma' \vdash B_1}
+$$
+
+$$\D = \infer[\equiv E_r]
+  {\Gamma, x:A, \Gamma' \vdash B_1}
+  {\Gamma, x:A, \Gamma' \vdash B_1 \equiv B_2 & \Gamma, x:A, \Gamma' \vdash B_2}
+$$
+
 \item 
 \[
 \infer[\equiv I^{u,v}]
-  {\Gamma^\downarrow \vdash \langle \lambda u \in A.M,\lambda v \in B.N \rangle A \equiv B \uparrow}
-  {\Gamma^\downarrow, u:A {\downarrow} \vdash M:B \uparrow
-  &\Gamma^\downarrow, v:B {\downarrow} \vdash N:A \uparrow}
+  {\Gamma^\downarrow \proves \langle \lambda u \in A.M,\lambda v \in B.N \rangle A \equiv B \uparrow}
+  {\Gamma^\downarrow, u:A {\downarrow} \proves M:B \uparrow
+  &\Gamma^\downarrow, v:B {\downarrow} \proves N:A \uparrow}
 \]
 \begin{tabular}{cc}
 $$
 \infer[\equiv E_L]
-  { \Gamma^\downarrow \vdash (\fst M) x : B \downarrow }
-  { \Gamma^\downarrow \vdash M:A \equiv B \downarrow
-  & \Gamma^\downarrow \vdash x : A \uparrow }
+  { \Gamma^\downarrow \proves (\fst M) x : B \downarrow }
+  { \Gamma^\downarrow \proves M:A \equiv B \downarrow
+  & \Gamma^\downarrow \proves x : A \uparrow }
 $$
 &
 $$
 \infer[\equiv E_R]
-  { \Gamma^\downarrow \vdash (\snd M) x : A \downarrow }
-  { \Gamma^\downarrow \vdash M:A \equiv B \downarrow
-  & \Gamma^\downarrow \vdash x : B \uparrow }
+  { \Gamma^\downarrow \proves (\snd M) x : A \downarrow }
+  { \Gamma^\downarrow \proves M:A \equiv B \downarrow
+  & \Gamma^\downarrow \proves x : B \uparrow }
 $$
 \end{tabular}
 
@@ -139,43 +159,128 @@ $$
 \begin{itemize}
 \item First we show the base cases:
 \begin{tabular}{cc}
-$\D = \infer[\top I]{\Gamma \vdash () : \top}{}$
+$\D = \infer[\top I]{\GV () : \top}{}$
 &
-$\D' = \infer[\top I]{\Gamma \vdash () : \top}{}$
+$\D' = \infer[\top I]{\GV () : \top}{}$
 \end{tabular}
 \begin{align*}
 \top &= \top && \text{by definition}
 \end{align*}
+
 
 \item case
 \begin{tabular}{cc}
-$\D = \infer[\top I]
-  {\Gamma \vdash \langle M,N \rangle : A_1 \land A_2}
-  {\Gamma \vdash }$
+$\D = \infer[\land I]
+  {\GV \langle M,N \rangle : A_1 \land B_1}
+  {\deduce{\GV M:A_1}{\E_1}
+  &\deduce{\GV N:B_1}{\E_2} }$
 &
-$\D' = \infer[\top I]{\Gamma \vdash () : \top}{}$
+$\D' = \infer[\land I]
+  {\GV \langle M,N \rangle : A_2 \land B_2}
+  {\deduce{\GV M:A_2}{\F_1}
+  &\deduce{\GV N:B_2}{\F_2} }$
 \end{tabular}
 \begin{align*}
-\top &= \top && \text{by definition}
+A_1 &= A_2 && \text{by IH on $\E_1$ and $\F_1$} \\
+B_1 &= B_2 && \text{by IH on $\E_2$ and $\F_2$} \\
+\GV \langle M,N \rangle &: A_1 \land B_1 && \text{by $\land I$ on $\F_1$ and $\F_2$} \\
+A_1 \land B_1 &= A_2 \land B_2 && \text{because we were able to derive $\GV \langle M,N \rangle : A_1 \land B_1$ from $\F_1,\F_2$}
 \end{align*}
 
-\item case %$\land I$
+
+\item case
 \begin{tabular}{cc}
-$$
-\infer[\land I]
-  {\Gamma \vdash \langle M,N \rangle : A\land B}
-  {\Gamma \vdash M:A & \Gamma \vdash N:B}
-$$
-&$$
-$$
+$\D = \infer[\land E_l]
+  {\GV \fst M:A_1}
+  {\deduce{\GV M : A_1 \land B}{\E}}$
+&
+$\D' = \infer[\land E_l]
+  {\GV \fst M:A_2}
+  {\deduce{\GV M : A_2 \land B}{\E'}}$
 \end{tabular}
+\begin{align*}
+A_1 \land B &= A_2 \land B && \text{by IH on $\E$ and $\E'$} \\
+\GV \fst M &: A_1 && \text{by $\land E_l$ on $\E'$} \\
+A_1&=A_2 && \text{because we derived $\GV \fst M:A_1$ from $\E'$}
+\end{align*}
+
+
+\item case
+\begin{tabular}{cc}
+$\D = \infer[\land E_r]
+  {\GV \snd M:B_1}
+  {\deduce{\GV M : A \land B_1}{\E}}$
+&
+$\D' = \infer[\land E_r]
+  {\GV \snd M:B_2}
+  {\deduce{\GV M : A \land B_2}{\E'}}$
+\end{tabular}
+\begin{align*}
+A \land B_1 &= A \land B_2 && \text{by IH on $\E$ and $\E'$} \\
+\GV \snd M &: B_1 && \text{by $\land E_r$ on $\E'$} \\
+B_1&=B_2 && \text{because we derived $\GV \snd M:B_1$ from $\E'$}
+\end{align*}
+
+
+\item case
+\begin{tabular}{cc}
+$\D = \infer[\lor I_l]
+  {\GV \inl^B M: A_1 \lor B}
+  {\deduce{\GV M : A_1}{\E}}$
+&
+$\D' = \infer[\lor I_l]
+  {\GV \inl^B M: A_2 \lor B}
+  {\deduce{\GV M : A_2}{\E'}}$
+\end{tabular}
+\begin{align*}
+A_1 &= A_2 && \text{by IH on $\E$ and $\E'$} \\
+\GV \inl^B M&: A_1 \lor B && \text{by $\lor I_l$ on $\E'$} \\
+A_1 \lor B &= A_2 \lor B && \text{because we derived $\GV \inl^B M: A_1 \lor B$ from $\E'$}
+\end{align*}
+
+
+\item case
+\begin{tabular}{cc}
+$\D = \infer[\lor I_r]
+  {\GV \inr^A M: A \lor B_1}
+  {\deduce{\GV M : B_1}{\E}}$
+&
+$\D' = \infer[\lor I_r]
+  {\GV \inr^A M: A \lor B_2}
+  {\deduce{\GV M : B_2}{\E'}}$
+\end{tabular}
+\begin{align*}
+B_1 &= B_2 && \text{by IH on $\E$ and $\E'$} \\
+\GV \inl^A M&: A \lor B_1 && \text{by $\lor I_r$ on $\E'$} \\
+A \lor B_1 &= A \lor B_2 && \text{because we derived $\GV \inr^A M: A \lor B_1$ from $\E'$}
+\end{align*}
+
+
+\item case
+\begin{tabular}{cc}
+$\D = \infer[\then I^u]
+  {\GV \lambda u \in A_1 . M : A_1 \then B_1}
+  {\deduce{\Gamma,u:A_1 \proves M:B_1}{\E}}$
+&
+$\D' = \infer[\then I^u]
+  {\GV \lambda u \in A_2 . M : A_2 \then B_2}
+  {\deduce{\Gamma,u:A_2 \proves M:B_2}{\E'}}$
+\end{tabular}
+\begin{align*}
+A_1 &= A_2 && \text{by IH on $\E$ and $\E'$} \\
+B_1 &= B_2 && \text{by IH on $\E$ and $\E'$} \\
+\Gamma,u:A_1 &\proves M:B_1 && \text{by $\then I$ on $\E'$} \\
+A_1 \then B_1 &= A_2 \then B_2 && \text{because we derived $A_1 \then B_1$ from $\E'$}
+\end{align*}
+
+The other cases follow a very similar argument.
 \end{itemize}
 
 \item
 
 \begin{enumerate}[label=\arabic*.,leftmargin=1em]
 \item Proof and term given as \texttt{conj1} in \texttt{ex3.tut}.
-\item The proof breaks down because doing an $\exists E^{x,p}$ gives us $x:\tau$ and $A\supset P(x)$ yet in order to prove $\forall y\in\tau.P(y)$ we need an arbitrary $y\in\tau$.
+\item The proof breaks down because doing an $\exists E^{x,p}$ gives us $x:\tau$ and $A\then P(x)$ yet in order to prove $\forall y\in\tau.P(y)$ we need an arbitrary $y\in\tau$.
 \item Same reason as the previous conjecture.
 \item Proof and term given as \texttt{conj4} in \texttt{ex3.tut}.
 \item As shown in the course notes, we need a witness for $x\in\tau$ such that $\neg B(x)$ yet we know nothing about the domain $\tau$. Therefore we cannot produce one just fdrom the assumption $\neg(\forall x\in\tau.B(x))$.
