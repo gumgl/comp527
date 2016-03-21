@@ -1,0 +1,64 @@
+\documentclass{article}
+
+\usepackage{mathtools}
+\usepackage[margin=0.5in]{geometry}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{xfrac}
+\usepackage{enumitem}
+\usepackage{multirow}
+
+\usepackage{proof}
+\usepackage{amssymb}
+\usepackage{latexsym}
+
+\author{Guillaume Labranche (260585371)}
+\title{COMP 527 -- Logic and Computation\\Assignment 4}
+\date{due on 24 March 2016}
+
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\E}{\mathcal{E}}
+\newcommand{\F}{\mathcal{F}}
+\newcommand{\then}{\supset}
+\newcommand{\proves}{\vdash}
+\newcommand{\GV}{\Gamma \proves}
+\DeclareMathOperator{\fst}{fst}
+\DeclareMathOperator{\snd}{snd}
+\DeclareMathOperator{\inl}{inl}
+\DeclareMathOperator{\inr}{inr}
+\DeclareMathOperator{\abort}{abort}
+\DeclareMathOperator{\tree}{tree}
+\DeclareMathOperator{\Empty}{Empty}
+\DeclareMathOperator{\Node}{Node}
+\DeclareMathOperator{\nat}{nat}
+\DeclareMathOperator{\f}{f}
+\DeclareMathOperator{\rec}{rec}
+\DeclareMathOperator{\with}{with}
+%\DeclareMathOperator{\tasdasfd}{true}
+%\renewcommand{\t}{\tasdasfd{}}
+%\renewcommand{\t}{\text{}}
+\begin{document}
+
+\maketitle
+
+\section{Induction principles for binary trees}
+\begin{enumerate}
+{\small \item \[
+\infer[\tree E^{N,T_1,T_2,ih_1,ih_2}]
+  {\GV A(t)}
+  {\GV t : \tree
+   & \GV A(\Empty)
+   & \Gamma,N:\nat,T_1:\tree,T_2:\tree,ih_1 : A(T_1), ih_2 : A(T_2) \proves A(\Node(N,T_1,T_2))}
+\] }
+
+{\footnotesize \item \[
+\infer[\tree E^{N,T_1,T_2,\f T_1,\f T_2}]
+  {\GV \rec^{\forall x:\tree.A(x)} t \with \f \Empty \to M_E | \f \Node(N,T_1,T_2) \to M_{Node} : A(t)}
+  {\GV t : \tree
+   & \GV M_E : A(\Empty)
+   & \Gamma,N:\nat,T_1:\tree,T_2:\tree,\f T_1 : A(T_1),\f T_2 : A(T_2) \proves M_{Node} : A(\Node(N,T_1,T_2))}
+\]}
+
+\end{enumerate}
+
+\end{document}
